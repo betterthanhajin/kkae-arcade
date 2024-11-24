@@ -5,7 +5,11 @@
 }
 
 .react-tabs__tab--selected {
-  background: #16274a !important;
+  background: transparent !important;
   color: white !important;
-  border: none !important;
+  border: yellowgreen !important;
+}
+
+#responsive-canvas {
+  width: 100%;
 }

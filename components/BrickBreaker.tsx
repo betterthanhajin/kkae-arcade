@@ -30,7 +30,7 @@ interface GameState {
 }
 
 const BRICK_ROWS = 5;
-const BRICK_COLS = 8;
+const BRICK_COLS = 9;
 const BRICK_PADDING = 10;
 const BRICK_WIDTH = 80;
 const BRICK_HEIGHT = 20;
@@ -226,15 +226,12 @@ const BrickBreaker: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
-      <div className="text-white mb-4">
-        마우스를 좌우로 움직여서 패들을 조작하세요!
-      </div>
+    <div className="flex flex-col items-center min-h-screen mt-4">
       <canvas
         ref={canvasRef}
         width={800}
         height={600}
-        className="border border-gray-600"
+        className="lg:w-[800px] w-full "
       />
     </div>
   );

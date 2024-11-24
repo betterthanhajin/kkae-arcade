@@ -29,7 +29,7 @@ const ShootingGame: React.FC = () => {
   });
   const gameStateRef = useRef<GameState>({
     player: {
-      x: 375, // 캔버스 가로 중앙 (800/2 - 플레이어 너비/2)
+      x: 275, // 캔버스 가로 중앙 (800/2 - 플레이어 너비/2)
       y: 520, // 캔버스 높이(600) - 플레이어 높이(50) - 여백(30)
       width: 80,
       height: 80,
@@ -46,14 +46,14 @@ const ShootingGame: React.FC = () => {
   useEffect(() => {
     // 플레이어(하얀 물개) 이미지 로드
     const playerImage = new Image();
-    playerImage.src = "/images/white-seal.png";
+    playerImage.src = "/images/kkae-white-seal.png";
     playerImage.onload = () => {
       playerImageRef.current = playerImage;
     };
 
     // 적(검은 물개) 이미지 로드
     const enemyImage = new Image();
-    enemyImage.src = "/images/black-seal.png";
+    enemyImage.src = "/images/kkae-black-seal.png";
     enemyImage.onload = () => {
       enemyImageRef.current = enemyImage;
     };
@@ -261,15 +261,15 @@ const ShootingGame: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-[#16274a] m-0 p-0">
+    <div className="flex flex-col items-center mt-4 p-0 min-h-screen ">
       <div className="text-white mb-4">
         좌클릭: 왼쪽으로 이동 | 우클릭: 오른쪽으로 이동
       </div>
       <canvas
         ref={canvasRef}
-        width={1000}
+        width={600}
         height={600}
-        className="border border-gray-600"
+        className="lg:w-[600px] w-full"
       />
     </div>
   );
