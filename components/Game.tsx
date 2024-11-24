@@ -23,13 +23,16 @@ const Game: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const playerImageRef = useRef<HTMLImageElement | null>(null);
   const enemyImageRef = useRef<HTMLImageElement | null>(null);
-
+  const movementRef = useRef<{ left: boolean; right: boolean }>({
+    left: false,
+    right: false,
+  });
   const gameStateRef = useRef<GameState>({
     player: {
       x: 375, // 캔버스 가로 중앙 (800/2 - 플레이어 너비/2)
       y: 520, // 캔버스 높이(600) - 플레이어 높이(50) - 여백(30)
-      width: 50,
-      height: 50,
+      width: 80,
+      height: 80,
       speed: 25,
     },
     enemies: [],
@@ -53,6 +56,48 @@ const Game: React.FC = () => {
     enemyImage.src = "/images/black-seal.png";
     enemyImage.onload = () => {
       enemyImageRef.current = enemyImage;
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      e.preventDefault(); // 기본 우클릭 메뉴 방지
+
+      // 왼쪽 클릭
+      if (e.button === 0) {
+        movementRef.current.left = true;
+      }
+      // 오른쪽 클릭
+      else if (e.button === 2) {
+        movementRef.current.right = true;
+      }
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      // 왼쪽 클릭
+      if (e.button === 0) {
+        movementRef.current.left = false;
+      }
+      // 오른쪽 클릭
+      else if (e.button === 2) {
+        movementRef.current.right = false;
+      }
+    };
+
+    // 우클릭 메뉴 방지
+    const preventDefault = (e: Event) => e.preventDefault();
+
+    canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mouseup", handleMouseUp);
+    canvas.addEventListener("contextmenu", preventDefault);
+
+    return () => {
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.removeEventListener("contextmenu", preventDefault);
     };
   }, []);
 
@@ -100,11 +145,22 @@ const Game: React.FC = () => {
     const gameLoop = () => {
       if (gameStateRef.current.gameOver) return;
 
+      // 플레이어 이동 처리
+      const player = gameStateRef.current.player;
+      if (movementRef.current.left) {
+        player.x = Math.max(0, player.x - player.speed);
+      }
+      if (movementRef.current.right) {
+        player.x = Math.min(
+          canvas.width - player.width,
+          player.x + player.speed
+        );
+      }
+
       // 화면 클리어
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // 플레이어 그리기
-      const player = gameStateRef.current.player;
       if (playerImageRef.current) {
         ctx.drawImage(
           playerImageRef.current,
@@ -120,8 +176,8 @@ const Game: React.FC = () => {
         gameStateRef.current.enemies.push({
           x: Math.random() * (canvas.width - 30),
           y: -30,
-          width: 30,
-          height: 30,
+          width: 50,
+          height: 50,
           speed: 2,
         });
       }
@@ -157,8 +213,6 @@ const Game: React.FC = () => {
           return enemy.y < canvas.height;
         }
       );
-
-      // 총알 이동 및 그리기
       // 총알 이동 및 그리기 - 위로 발사되도록 수정
       gameStateRef.current.bullets = gameStateRef.current.bullets.filter(
         (bullet) => {
@@ -207,7 +261,10 @@ const Game: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
+      <div className="text-white mb-4">
+        좌클릭: 왼쪽으로 이동 | 우클릭: 오른쪽으로 이동
+      </div>
       <canvas
         ref={canvasRef}
         width={800}
