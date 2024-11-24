@@ -19,7 +19,7 @@ interface GameState {
   gameOver: boolean;
 }
 
-const Game: React.FC = () => {
+const ShootingGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const playerImageRef = useRef<HTMLImageElement | null>(null);
   const enemyImageRef = useRef<HTMLImageElement | null>(null);
@@ -248,7 +248,7 @@ const Game: React.FC = () => {
       ctx.fillText(`Lives: ${gameStateRef.current.lives}`, 10, 60);
 
       if (gameStateRef.current.gameOver) {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "blue";
         ctx.font = "40px Arial";
         ctx.fillText("GAME OVER", canvas.width / 2 - 100, canvas.height / 2);
       }
@@ -261,13 +261,13 @@ const Game: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-900">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-[#16274a] m-0 p-0">
       <div className="text-white mb-4">
         좌클릭: 왼쪽으로 이동 | 우클릭: 오른쪽으로 이동
       </div>
       <canvas
         ref={canvasRef}
-        width={800}
+        width={1000}
         height={600}
         className="border border-gray-600"
       />
@@ -275,4 +275,4 @@ const Game: React.FC = () => {
   );
 };
 
-export default Game;
+export default ShootingGame;
